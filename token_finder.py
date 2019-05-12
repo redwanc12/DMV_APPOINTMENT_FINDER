@@ -1,6 +1,4 @@
-import re
-import string
-from urllib.parse import urlparse
+
 from pathlib import Path
 
 from bs4 import BeautifulSoup
@@ -30,7 +28,7 @@ class tokenFinder(object):
         return(self.driver.page_source) 
 
     def scrapeDate(self, date):
-        # uses web driver to access a new page
+        # uses web driver to access a new page.
         try:
             self.driver.find_element_by_xpath('//*[@title="{}"]'.format(date)).click()
         except NoSuchElementException:
@@ -39,6 +37,7 @@ class tokenFinder(object):
         return(self.driver.page_source)
 
     def nextMonth(self):
+        # Mimicks the action of pressing the next month button.
         try:
             self.driver.find_element_by_xpath('//*[@title="Go to the next month"]').click()
         except NoSuchElementException:
@@ -48,18 +47,15 @@ class tokenFinder(object):
     def closeDriver(self):
         self.driver.close()
 
-        
+    def getEventVal(self, source):
+        soup = BeautifulSoup(source, 'html.parser')
+        eventVal = soup.find("input", {"id": "__EVENTVALIDATION"})['value']
+        return eventVal
 
 
 if __name__ == '__main__':
     scraper = tokenFinder()
-    dateList = ["May 28", "May 29", "June 13"]
     scraper.authenticateClient()
-    for each in dateList:
-        if('May' not in each):
-            scraper.nextMonth()
-        file = open(each +'.html', 'w')
-        file.write(scraper.scrapeDate(each))
-        file.close()
+    data = scraper.scrapeDate('May 22')
+    print(scraper.getEventVal(data))
     scraper.closeDriver()
-
