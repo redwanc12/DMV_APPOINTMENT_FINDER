@@ -48,14 +48,21 @@ class tokenFinder(object):
         self.driver.close()
 
     def getEventVal(self, source):
+        #Returns the Event Validation of a given HTML source
         soup = BeautifulSoup(source, 'html.parser')
         eventVal = soup.find("input", {"id": "__EVENTVALIDATION"})['value']
         return eventVal
+
+    def getViewState(self, source):
+        # Returns the viewState of a given HTML source
+        soup = BeautifulSoup(source, 'html.parser')
+        vs = soup.find("input", {"id": "__VIEWSTATE"})['value']
+        return vs
 
 
 if __name__ == '__main__':
     scraper = tokenFinder()
     scraper.authenticateClient()
     data = scraper.scrapeDate('May 22')
-    print(scraper.getEventVal(data))
+    print(scraper.getViewState(data))
     scraper.closeDriver()
