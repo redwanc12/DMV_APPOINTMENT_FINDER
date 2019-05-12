@@ -9,4 +9,3 @@ driver.get(LINK)
 soup = BeautifulSoup(driver.page_source, 'html.parser')
 driver.quit()
 
-print(soup.prettify)
