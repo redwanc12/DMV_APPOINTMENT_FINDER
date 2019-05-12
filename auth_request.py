@@ -1,5 +1,6 @@
 import requests
 from calendar import monthrange
+from token_finder import tokenFinder
 
 LINK = "https://www12.honolulu.gov/csdarts/frmApptInt.aspx"
 
@@ -46,6 +47,17 @@ class httpRequester(object):
         return page.text
 
 
-# file = open('nudes.html', 'w')
-# file.write(GetAuthorizedPage())
-# file.close()
+if __name__ == '__main__':
+    requester = httpRequester()
+    scraper = tokenFinder()
+    scraper.authenticateClient()
+    data = scraper.scrapeDate('May 22')
+    vs = scraper.getViewState(data)
+    ev = scraper.getEventVal(data)
+    htmlPage = requester.GetPage(requester.date_id(5, 22), ev, vs)
+    file = open('test.html', 'w')
+    file.write(htmlPage)
+    file.close()
+    scraper.closeDriver()
+
+
