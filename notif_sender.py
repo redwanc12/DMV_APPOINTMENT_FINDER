@@ -2,18 +2,6 @@ import smtplib
 from check_avail import openFinder
 from token_finder import tokenFinder
 
-for i in range(10):
-
-    data = tf.nextDayWithOpens()
-
-    of = openFinder()
-    dates = of.findDates(data)
-
-    
-    for each in dates:
-        body += (each['openings'] + ' Opening at ' + each['time'] + ' at ' + each['location'] + ' on ' + each['day'] + '\n')
-
-
 class notif(object):
     def __init__(self):
         self.email = n/a
@@ -32,9 +20,9 @@ class notif(object):
     def sendEmail(self, subject, body):
             with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
                 msg = f'Subject: {subject}\n\n{body}'
-                smtp.sendmail(self.email, 'redwanc12@gmail.com@gmail.com', msg)
+                smtp.sendmail(self.email, n/a, msg)
 
-    def dateToBody(self, date):
+    def dateToBody(self, dates):
         body = ''
         for each in dates:
             body += (each['openings'] + ' Opening at ' + each['time'] + ' at ' + each['location'] + ' on ' + each['day'] + '\n')
