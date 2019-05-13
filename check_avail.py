@@ -1,11 +1,18 @@
 from bs4 import BeautifulSoup
-from selenium import webdriver
-from pathlib import Path
 
-LINK = "https://www12.honolulu.gov/csdarts/frmApptInt.aspx"
-driver = webdriver.Chrome(str(Path().absolute()) + '/chromedriver' )
-driver.get(LINK)
+locationList = ['Kapalama', 'Kapolei', 'Koolau', 'Wahiawa', 'Waianae']
 
-soup = BeautifulSoup(driver.page_source, 'html.parser')
-driver.quit()
+file = open('test2.html', 'r')
+data = file.read()
+file.close()
+
+soup = BeautifulSoup(data, 'html.parser')
+times = soup.find_all('tr', {'class':['TableItemLine','TableAltItemLine']})
+
+for each in times:
+    time = each.td.text
+    spots = each.find_all(['input', 'span'])
+    for index, spot in enumerate(spots):
+        if('None' != spot.text):
+            print('Opening at ' + time + ' at ' + locationList[index])
 
