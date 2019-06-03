@@ -112,6 +112,7 @@ class tokenFinder(object):
 
     def refresh(self):
         self.driver.get(self.url)
+        return(self.driver.page_source)
 
 
 if __name__ == '__main__':
