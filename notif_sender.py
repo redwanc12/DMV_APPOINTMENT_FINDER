@@ -1,6 +1,7 @@
 import smtplib
 from check_avail import openFinder
 from token_finder import tokenFinder
+from models import User, Spots
 import time
 
 import requests
@@ -56,8 +57,24 @@ parser = openFinder()
 starttime = time.time()
 tf.authenticateClient()
 
-print (parser.compare_date_differece(tf.refresh(), tf.nextDayWithOpens()))
-tf.closeDriver()
+testUser = User('redwanc12@gmail.com', '')
+next_spots = parser.findDates(tf.nextDayWithOpens())
+
+while(True):
+    for each in next_spots:
+        spot = Spots(
+            each['openings'],
+            each['time'],
+            each['location'],
+            each['day']
+        )
+        if not spot in testUser.excludeList:
+            sender.sendEmail(testUser.email, 'open', each['location']) # make this mmethod in spots model
+            testUser.append_spot(spot)
+    
+    time.sleep(60.0 - ((time.time() - starttime) % 60.0))
+
+
 """
 while(True):
     r = requests.get('http://127.0.0.1:8000/polls/open')
