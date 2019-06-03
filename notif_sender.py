@@ -3,16 +3,22 @@ from check_avail import openFinder
 from token_finder import tokenFinder
 import time
 
-emailList = [
-    {
-        'day':'July 01',
-        'email':'redwanc12@gmail.com'
-    },
-    {
-        'day':'August 02',
-        'email':'mchowd13@asu.edu'
-    }
-]
+import requests
+from bs4 import BeautifulSoup
+
+r = requests.get('http://127.0.0.1:8000/polls/open')
+soup = BeautifulSoup(r.text, 'html.parser')
+emails = soup.find_all('h1')
+days = soup.find_all('p')
+emailList = []
+
+for each in range(len(emails)):
+    emailList.append({
+        'day': days[each].text,
+        'email': emails[each].text
+    })
+
+
 
 class notif(object):
     def __init__(self):
@@ -43,13 +49,29 @@ class notif(object):
         return body
 
 
+#testing
 sender = notif()
 tf = tokenFinder()
 parser = openFinder()
 starttime = time.time()
-
 tf.authenticateClient()
+
+print (parser.compare_date_differece(tf.refresh(), tf.nextDayWithOpens()))
+tf.closeDriver()
+"""
 while(True):
+    r = requests.get('http://127.0.0.1:8000/polls/open')
+    soup = BeautifulSoup(r.text, 'html.parser')
+    emails = soup.find_all('h1')
+    days = soup.find_all('p')
+    emailList = []
+
+    for each in range(len(emails)):
+        emailList.append({
+            'day': days[each].text,
+            'email': emails[each].text
+        })
+
     tf.refresh()
     for each in emailList:
         data = tf.scrapeDate(each['day'])
@@ -60,3 +82,4 @@ while(True):
     time.sleep(60.0 - ((time.time() - starttime) % 60.0))
 
 tf.closeDriver()
+"""

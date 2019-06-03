@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from calendar import monthrange
 
 locationList = ['Kapalama', 'Kapolei', 'Koolau', 'Wahiawa', 'Waianae']
 
@@ -8,8 +9,10 @@ class openFinder(object):
         self.locationList = locationList
     
     def findDates(self, data):
+        """Returns a list of open dates from a specific day"""
         soup = BeautifulSoup(data, 'html.parser')
-        times = soup.find_all('tr', {'class':['TableItemLine','TableAltItemLine']})
+        times = soup.find_all('tr', {'class':['TableItemLine', 'TableAltItemLine']})
+        day = soup.find("span", {"id": "lblDate"}).text
         
         listOfDateDict = []
 
@@ -21,21 +24,35 @@ class openFinder(object):
                     dateDict = {
                         'openings': spot['value'],
                         'time': time,
-                        'location': locationList[index]
+                        'location': locationList[index],
+                        'day': day
                     }
                     listOfDateDict.append(dateDict)
         return listOfDateDict
 
+    def date_id(self, month, day, year=2019):
+        #Converts month and day to the day ID used by DMV
+        month = int(month)
+        day = int(day)
+        year = int(year)
+        b = 6939 #constant only works after 5/9
+        for each in range(month-1):
+            b += monthrange(year, each+1)[1]
+        b += day
+        return b
 
-file = open('test2.html', 'r')
-data = file.read()
-file.close()
+    def compare_date_differece(self, old_source, new_source):
+        """Compares how many days away from the current day a new date is"""
+        soup = BeautifulSoup(old_source, 'html.parser')
+        old_day = soup.find("span", {"id": "lblDate"}).text
+        old_day_attrs = old_day.split('/')
+        old_id = (self.date_id(old_day_attrs[0], old_day_attrs[1], old_day_attrs[2]))
 
-if __name__ == "__main__":
-    finder = openFinder()
-    dateList = finder.findDates(data)
-    for each in dateList:
-        print(each['openings'] + ' Opening at ' + each['time'] + ' at ' + each['location'])
+        soup = BeautifulSoup(new_source, 'html.parser')
+        new_day = soup.find("span", {"id": "lblDate"}).text
+        new_day_attrs = new_day.split('/')
+        new_id = (self.date_id(new_day_attrs[0], new_day_attrs[1], new_day_attrs[2]))
 
+        return new_id - old_id
 
-
+    

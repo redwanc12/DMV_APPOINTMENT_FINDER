@@ -111,6 +111,7 @@ class tokenFinder(object):
         return vs
 
     def refresh(self):
+        """goes to the current date page"""
         self.driver.get(self.url)
         return(self.driver.page_source)
 
@@ -118,6 +119,5 @@ class tokenFinder(object):
 if __name__ == '__main__':
     scraper = tokenFinder()
     scraper.authenticateClient()
-    scraper.refresh()
-    print(scraper.getDayList(5))
+    print(scraper.refresh())
     scraper.closeDriver()

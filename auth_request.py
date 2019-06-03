@@ -11,17 +11,35 @@ headers = {
     'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36',
     'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3'
 }
+
+
 class httpRequester(object):
     #handles requests through HTTP. No driver needed
+
+    tokenList = []
     
     def __init__(self):
         self.url = LINK
         self.headers = headers
     
+    def appendTokenList(self, dateID, eventVal, viewState):
+        # adds a new token to the list of saved tokens
+        self.tokenList.append({
+            'dateID': dateID,
+            'eventVal': eventVal,
+            'viewState':viewState
+        })
+
+    def getToken(self, dateID):
+        # retrieves a token
+        for each in self.tokenList:
+            if(each['dateID'] == dateID):
+                return each
+
     def date_id(self, month, day, year=2019):
     #Converts month and day to the day ID used by DMV
         b = 6939 #constant only works after 5/9
-        for each in range(month-1):
+        for each in range(month-1): 
             b += monthrange(year, each+1)[1]
         b+=day
         return b
@@ -47,14 +65,15 @@ class httpRequester(object):
         return page.text
 
 
+#testing
 if __name__ == '__main__':
     requester = httpRequester()
     scraper = tokenFinder()
     scraper.authenticateClient()
-    data = scraper.scrapeDate('May 22')
+    data = scraper.scrapeDate('September 12')
     vs = scraper.getViewState(data)
     ev = scraper.getEventVal(data)
-    htmlPage = requester.GetPage(requester.date_id(5, 22), ev, vs)
+    htmlPage = requester.GetPage(requester.date_id(9, 12), ev, vs)
     file = open('test.html', 'w')
     file.write(htmlPage)
     file.close()
