@@ -1,11 +1,8 @@
 """Class to use webDriver to scrape data"""
-
 from pathlib import Path
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.support.ui import Select
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
 
 LINK = "https://www12.honolulu.gov/csdarts/frmApptInt.aspx"
@@ -114,10 +111,3 @@ class tokenFinder(object):
         """goes to the current date page"""
         self.driver.get(self.url)
         return(self.driver.page_source)
-
-
-if __name__ == '__main__':
-    scraper = tokenFinder()
-    scraper.authenticateClient()
-    print(scraper.refresh())
-    scraper.closeDriver()

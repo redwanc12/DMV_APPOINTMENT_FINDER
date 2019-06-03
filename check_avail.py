@@ -1,5 +1,7 @@
-from bs4 import BeautifulSoup
+"""class to check available dates"""
 from calendar import monthrange
+from bs4 import BeautifulSoup
+
 
 locationList = ['Kapalama', 'Kapolei', 'Koolau', 'Wahiawa', 'Waianae']
 
@@ -30,8 +32,9 @@ class openFinder(object):
                     listOfDateDict.append(dateDict)
         return listOfDateDict
 
-    def date_id(self, month, day, year=2019):
-        #Converts month and day to the day ID used by DMV
+    @staticmethod
+    def date_id(month, day, year=2019):
+        """Converts month and day to the day ID used by DMV"""
         month = int(month)
         day = int(day)
         year = int(year)

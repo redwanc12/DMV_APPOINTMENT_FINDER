@@ -63,20 +63,3 @@ class httpRequester(object):
             headers=self.headers,
         )
         return page.text
-
-
-#testing
-if __name__ == '__main__':
-    requester = httpRequester()
-    scraper = tokenFinder()
-    scraper.authenticateClient()
-    data = scraper.scrapeDate('September 12')
-    vs = scraper.getViewState(data)
-    ev = scraper.getEventVal(data)
-    htmlPage = requester.GetPage(requester.date_id(9, 12), ev, vs)
-    file = open('test.html', 'w')
-    file.write(htmlPage)
-    file.close()
-    scraper.closeDriver()
-
-
