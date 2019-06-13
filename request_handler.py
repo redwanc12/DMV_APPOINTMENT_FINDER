@@ -38,8 +38,8 @@ class API:
             {"excludeSpotList":spot_list},
             headers=self.header)
     
-headers = {'Authorization':'token 3ab74d348c070ece89b88ea3728f9ed8b22e44b8 '}
-api_test = API('http://127.0.0.1:8000/', headers)
-
-
-api_test.append_exclude_list(8, 23)
+    def clear_exclude_list(self, user_id):
+        requests.patch(
+            f'{self.url}api/dmv/customers/{user_id}/',
+            {"excludeSpotList":[]}, # this does not work.
+            headers=self.header)
