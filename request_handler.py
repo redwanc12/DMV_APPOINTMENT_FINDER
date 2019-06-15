@@ -26,20 +26,29 @@ class API:
             headers=self.header
         )
     
-    def append_exclude_list(self, user_id, spot_id):
+    def append_exclude_list(self, user_id, spot_text):
         response = requests.get(f'{self.url}api/dmv/customers/{user_id}/', headers=self.header)
         current_spots = response.json()['excludeSpotList']
-        spot_list = []
-        spot_list.append(current_spots)
-        spot_list.append(spot_id)
+        new_text = f'{current_spots}{spot_text}'
 
         requests.patch(
             f'{self.url}api/dmv/customers/{user_id}/',
-            {"excludeSpotList":spot_list},
+            {"excludeSpotList":new_text},
             headers=self.header)
     
     def clear_exclude_list(self, user_id):
         requests.patch(
             f'{self.url}api/dmv/customers/{user_id}/',
-            {"excludeSpotList":[]}, # this does not work.
+            {"excludeSpotList":''},
+            headers=self.header)
+        
+    def delete_from_exclude_list(self, user_id, spot_text):
+        response = requests.get(f'{self.url}api/dmv/customers/{user_id}/', headers=self.header)
+        current_spots = response.json()['excludeSpotList']
+        if spot_text in current_spots:
+            current_spots = current_spots.replace(spot_text, '')
+
+        requests.patch(
+            f'{self.url}api/dmv/customers/{user_id}/',
+            {"excludeSpotList":current_spots},
             headers=self.header)
