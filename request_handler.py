@@ -25,6 +25,12 @@ class API:
             data=data,
             headers=self.header
         )
+
+    def get_users_list(self):
+        return requests.get(
+            url=f'{self.url}api/dmv/customers/',
+            headers=self.header
+        ).text
     
     def append_exclude_list(self, user_id, spot_text):
         response = requests.get(f'{self.url}api/dmv/customers/{user_id}/', headers=self.header)
