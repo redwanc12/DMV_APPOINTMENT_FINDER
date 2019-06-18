@@ -36,11 +36,10 @@ class API:
     def append_exclude_list(self, user_id, spot_text):
         response = requests.get(f'{self.url}api/dmv/customers/{user_id}/', headers=self.header)
         current_spots = response.json()['excludeSpotList']
-        new_text = f'{current_spots}{spot_text}'
 
         requests.patch(
             f'{self.url}api/dmv/customers/{user_id}/',
-            {"excludeSpotList":new_text},
+            {"excludeSpotList":current_spots + spot_text},
             headers=self.header)
     
     def clear_exclude_list(self, user_id):
